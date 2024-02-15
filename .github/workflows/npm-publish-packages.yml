@@ -10,31 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
       - run: npm ci
       - run: npm run build
 
-  publish-gpr:
+  npm:
     needs: build
     runs-on: ubuntu-latest
     env:
       BUCKET: ${{ secrets.CDN_LIBS_AWS_BUCKET_NAME }}
       CLOUDFRONT: ${{ secrets.CDN_AWS_DISTRIBUTION_ID }}
       VERSION: ${{ github.ref_name }}
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
           scope: '@libercapital'
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
           aws-access-key-id: ${{ secrets.CDN_AWS_ACCESS_KEY_ID }}
